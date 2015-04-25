@@ -16,6 +16,6 @@ run_analysis.R
 Instructions: 
 To submit:
 
-source("https://github.com/alkacosta/coursera-getdata/blob/master/run_analysis.R")
+source('https://raw.githubusercontent.com/alkacosta/coursera-getdata/master/run_analysis.R', echo=TRUE)
 
 submit()
