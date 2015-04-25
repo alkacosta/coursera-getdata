@@ -37,7 +37,9 @@ So for example variable tBodyAcc-mean()-Z is "normalized mean body acceleratio
 
 Here are the data for the project: 
 
-[https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip ](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip )
+[https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip)
+
+
 
 **Files**
 
@@ -86,39 +88,46 @@ Below discusses (and provided pseudo-code) explaining each steps. Please see run
 
 I merged training and test data as
    
-`xfile <- rbind(read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE),             `
-`               read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE))               `
-`yfile <- rbind(read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE),             `
-`               read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE))               `
-`subjectfile <- rbind(read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE), ` 
-`                     read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE))   `
-
+    xfile <- rbind(read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE),
+       read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE))   
+    yfile <- rbind(read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE), 
+       read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE))   
+    subjectfile <- rbind(read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE), 
+       read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE))   
 
 
 **Extracts only the measurements on the mean and standard deviation for each measurement.**
+
 
 `features <- rename(features, feat_id = V1, feat_name = V2)`
 
 **Search for matches to argument mean or standard deviation (sd)  within each element of character vector**
 
-`extract_features <- grep("-mean\\(\\)|-std\\(\\)", features$feat_name)`
-`xfile  <- xfile[, extract_features]` 
 
-Replaces all matches of a string features 
+    extract_features <- grep("-mean\\(\\)|-std\\(\\)", features$feat_name)
+    xfile  <- xfile[, extract_features] 
+    
+Replaces all matches of a string features
+ 
 `names(xfile) <- gsub("\\(|\\)", "", (features[extract_features, 2]))`
 
 **Uses descriptive activity names to name the activities in the data set**
+
 `features <- rename(features, feat_id = V1, feat_name = V2)`
 
 **Appropriately labels the data set with descriptive variable names. **
-`activity_labels <- rename(activity_labels, act_id = V1, act_name = V2)`
-`names(yfile) <- "Activity"`
-`names(subjectfile) <- "Subject"`
+
+    activity_labels <- rename(activity_labels, act_id = V1, act_name = V2)
+    names(yfile) <- "Activity"
+    names(subjectfile) <- "Subject"
 
 **Combined all tidy’d data.**
+
 `tidyDataSet <- cbind(subjectfile, yfile, xfile)`
 
 **Aggregation**
+
+
 Aggregated the data to get the average for each activity and each subject.
 `tidyDataAVGSet <- aggregate(p,list(tidyDataSet$Subject, tidyDataSet$Activity), mean)`
 
