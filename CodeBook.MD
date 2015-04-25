@@ -129,6 +129,7 @@ Replaces all matches of a string features
 
 
 Aggregated the data to get the average for each activity and each subject.
+
 `tidyDataAVGSet <- aggregate(p,list(tidyDataSet$Subject, tidyDataSet$Activity), mean)`
 
 <B>Result</B>
