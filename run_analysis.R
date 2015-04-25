@@ -1,3 +1,11 @@
+#Project:Coursera get-data
+#Author: Al Acosta
+#
+#Description: The purpose of this project is to demonstrate your ability to collect, work with, 
+#             and clean a data set. 
+#             The goal is to prepare tidy data that can be used for later analysis.
+#Code: run_analysis.R
+#The code performs the following as defined in the final project:
 #0. Setup environment and Extract data
 #1. Merges the training and the test sets to create one data set.
 #2. Extracts only the measurements on the mean and standard deviation for each measurement. 
@@ -13,10 +21,13 @@ if (!require("data.table")) {
 if (!require("reshape2")) {
   install.packages("reshape2")  
 }
+if (!require("dplyr")) {
+  install.packages("dplyr")  
+}
 
 require("data.table")
 require("reshape2")
-
+require("dplyr")
 
 # set the URL location
 fileURL <- 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'
@@ -53,27 +64,34 @@ activity_labels <- read.table("./UCI HAR Dataset/activity_labels.txt")
 
 ## 1. Merges the training and the test sets to create one data set.
 ## Get the train data (x,y,subject)
-X_train <- read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE)
+x_train <- read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE)
 y_train <- read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE)
 subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE)
 
 
 ## Get the test data (x,y,subject)
-X_test <- read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE)
-y_test <- read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE)
-subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE)
+#x_test <- read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE)
+#y_test <- read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE)
+#subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE)
 
 
 # Combine train vs test by rows for x,y and subject
-xfile <- rbind(x_train, X_test)
-yfile <- rbind(y_train, y_test)
-subjectfile <- rbind(subject_train, subject_test)
+#xfile <- rbind(x_train, X_test)
+#yfile <- rbind(y_train, y_test)
+#subjectfile <- rbind(subject_train, subject_test)
+#Read file and combine for x,y and subject
+xfile <- rbind(read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE), 
+               read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE))
+yfile <- rbind(read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE),
+               read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE))
+subjectfile <- rbind(read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE),
+                     read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE))
 
 
 #2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 
 # Friendly names tos column
-names(features) <- c('feat_id', 'feat_name')
+features <- rename(features, feat_id = V1, feat_name = V2)
 
 # Search for matches to argument mean or standard deviation (sd)  within each element of character vector
 #index_features <- grep("-mean\\(\\)|-std\\(\\)", features$feat_name) 
@@ -88,7 +106,8 @@ names(xfile) <- gsub("\\(|\\)", "", (features[extract_features, 2]))
 
 #4. Appropriately labels the data set with descriptive variable names. 
 # Friendly names to activities column
-names(activity_labels) <- c('act_id', 'act_name')
+#names(activity_labels) <- c('act_id', 'act_name')
+activity_labels <- rename(activity_labels, act_id = V1, act_name = V2)
 yfile[, 1] = activity_labels[yfile[, 1], 2]
 
 names(yfile) <- "Activity"
