@@ -2,7 +2,7 @@
 Coursera Training - Getting and Cleaning Data
 Repository for Coursera - Getting and Cleaning Data: Final Project
 
-Instructions: https://class.coursera.org/rprog-004/assignment/view?assignment_id=7
+Instructions: https://class.coursera.org/getdata-013/human_grading/view/courses/973500/assessments/3/submissions
 
 Submitted code is in the following files
 
@@ -10,6 +10,6 @@ run_analysis.R
 
 To submit:
 
-source("http://d396qusza40orc.cloudfront.net/rprog%2Fscripts%2Frun_analysis.R")
+source("https://github.com/alkacosta/coursera-getdata/blob/master/run_analysis.R")
 
 submit()
